@@ -2,6 +2,11 @@ const express=require('express');
 const db=require("./config/db");
 const dotenv=require("dotenv");
 const authRoutes=require("./routes/authRoutes");
+const productRoutes = require("./routes/productRoutes");
+const searchRoutes = require("./routes/searchRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+
+
 
 dotenv.config();
 
@@ -10,6 +15,11 @@ const app=express();
 
 app.use(express.json());
 app.use("/api/auth",authRoutes);
+app.use("/api", productRoutes);
+app.use("/api", searchRoutes);
+app.use("/api", cartRoutes);
+
+
 
 app.get("/",(req,res)=>{
     res.send("DealiFy API Is Running");
