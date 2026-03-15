@@ -8,7 +8,7 @@ const searchProducts = (query) => {
     AGAINST(? IN NATURAL LANGUAGE MODE)
     LIMIT 20
   `;
-  return db.promise().query(sql, [query]);
+  return db.query(sql, [query]);
 };
 
 const logSearch = (userId, query, resultCount) => {
@@ -16,7 +16,7 @@ const logSearch = (userId, query, resultCount) => {
     INSERT INTO search_logs (user_id, search_query, result_count)
     VALUES (?, ?, ?)
   `;
-  return db.promise().query(sql, [userId, query, resultCount]);
+  return db.query(sql, [userId, query, resultCount]);
 };
 
 module.exports = {
