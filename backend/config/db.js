@@ -1,16 +1,46 @@
-const mysql = require("mysql2/promise");
-require("dotenv").config();
+const mongoose = require("mongoose");
+const path = require("path");
 
-const db = mysql.createPool({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "root@123",
-  database: process.env.DB_NAME || "dealify",
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
+if (!process.env.MONGODB_URI && !process.env.PORT) {
+  require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+}
 
-console.log("MySQL Connected");
+let connected = false;
 
-module.exports = db;
+function unsupportedMySqlError() {
+  throw new Error(
+    "This backend now uses MongoDB only. Use MONGODB_URI (Atlas cluster URI) in backend/.env.",
+  );
+}
+
+async function connectDB() {
+  if (connected) return mongoose.connection;
+
+  const uri = process.env.MONGODB_URI;
+
+  if (!uri) {
+    throw new Error("MONGODB_URI is not configured");
+  }
+
+  await mongoose.connect(uri, {
+    serverSelectionTimeoutMS: 15000,
+  });
+
+  connected = true;
+  console.log("MongoDB Connected");
+
+  return mongoose.connection;
+}
+
+const dbCompat = {
+  connectDB,
+  mongoose,
+  query: unsupportedMySqlError,
+  promise: () => {
+    return {
+      query: unsupportedMySqlError,
+    };
+  },
+};
+
+module.exports = dbCompat;

@@ -1,0 +1,1403 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dealify | Explore Products</title>
+    <style>
+      :root {
+        --teal: #2bafa9;
+        --orange: #f9812a;
+        --navy: #0f172a;
+        --slate-600: #475569;
+        --slate-400: #94a3b8;
+        --border: #e2e8f0;
+        --blue-btn: #2563eb;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", -apple-system, sans-serif;
+      }
+
+      body {
+        background-color: #fff;
+        color: var(--navy);
+        overflow-y: auto;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        padding: 16px 8%;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 40px;
+      }
+
+      .logo {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--navy);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: fit-content;
+      }
+
+      .logo-box {
+        width: 26px;
+        height: 26px;
+        background: var(--orange);
+        border-radius: 6px;
+      }
+
+      .search-bar {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        padding: 12px 20px;
+        border-radius: 12px;
+      }
+
+      .search-bar input {
+        border: none;
+        outline: none;
+        background: transparent;
+        width: 100%;
+        font-size: 15px;
+        margin-left: 12px;
+        color: var(--navy);
+      }
+
+      .user-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        position: relative;
+      }
+
+      .profile-menu {
+        position: absolute;
+        top: 58px;
+        right: 0;
+        min-width: 170px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
+        padding: 6px;
+        display: none;
+        z-index: 1200;
+      }
+
+      .profile-menu.show {
+        display: block;
+      }
+
+      .profile-item {
+        width: 100%;
+        text-align: left;
+        border: none;
+        background: transparent;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e293b;
+        cursor: pointer;
+      }
+
+      .profile-item:hover {
+        background: #f8fafc;
+      }
+
+      .profile-head {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 4px;
+      }
+
+      .profile-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .profile-email {
+        margin-top: 2px;
+        font-size: 12px;
+        color: #64748b;
+      }
+
+      .filters-container {
+        padding: 20px 8%;
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+
+      .filters-container::-webkit-scrollbar {
+        display: none;
+      }
+
+      .chip {
+        border: 1px solid var(--border);
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--slate-600);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: white;
+        transition: 0.2s;
+      }
+
+      .chip:hover {
+        border-color: var(--navy);
+        color: var(--navy);
+      }
+
+      .chip.active {
+        border-color: #c2d9fb;
+        background: #eff6ff;
+        color: #1d4ed8;
+      }
+
+      .chip-icon {
+        width: 15px;
+        height: 15px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .grid-wrapper {
+        padding: 10px 8% 100px;
+      }
+
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 24px;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+        cursor: pointer;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        border-color: #cfdaea;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+      }
+
+      .img-box {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        border-radius: 14px 14px 0 0;
+        overflow: hidden;
+        background: #ffffff;
+        position: relative;
+        padding: 10px;
+      }
+
+      .product-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        image-rendering: -webkit-optimize-contrast;
+        transition: transform 0.22s ease, filter 0.22s ease;
+      }
+
+      .img-box::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0), rgba(15, 23, 42, 0.12));
+        opacity: 0;
+        transition: opacity 0.22s ease;
+        z-index: 1;
+      }
+
+      .image-cta {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        z-index: 2;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: rgba(15, 23, 42, 0.5);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        opacity: 0.88;
+      }
+
+      .card:hover .product-img {
+        transform: scale(1.01);
+        filter: saturate(1.02) contrast(1.01);
+      }
+
+      .card:hover .img-box::before {
+        opacity: 1;
+      }
+
+      .details {
+        padding: 14px 12px 16px;
+      }
+
+      .name {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.25;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .sub-info {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .brand {
+        font-size: 13px;
+        color: #1e293b;
+        font-weight: 600;
+      }
+
+      .footer-info {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .platform-pill {
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid #d6e4f5;
+        background: #f8fbff;
+        color: #1e3a8a;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .home-float {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        background: #ffffff;
+        color: #1e3a8a;
+        border: 1px solid #c7d8f8;
+        padding: 9px 16px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 12px;
+        box-shadow: 0 8px 18px rgba(29, 78, 216, 0.12);
+        z-index: 1001;
+      }
+
+      .home-float:hover {
+        background: #eff6ff;
+        border-color: #93c5fd;
+      }
+
+      .chat-widget {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background-color: var(--blue-btn);
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+        transition: 0.3s;
+        z-index: 1000;
+      }
+
+      .feedback-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.45);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        padding: 20px;
+      }
+
+      .feedback-modal.show {
+        display: flex;
+      }
+
+      .feedback-card {
+        width: min(520px, 100%);
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        padding: 18px;
+      }
+
+      .feedback-title {
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+
+      .feedback-sub {
+        color: var(--slate-600);
+        font-size: 13px;
+        margin-bottom: 12px;
+      }
+
+      .feedback-input,
+      .feedback-textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+
+      .feedback-textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .feedback-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .btn-small {
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--navy);
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .btn-small.primary {
+        background: #2563eb;
+        border-color: #2563eb;
+        color: #fff;
+      }
+
+      .card-actions {
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .add-cart-btn {
+        border: 1px solid #c7d8f8;
+        background: #eff6ff;
+        color: #1d4ed8;
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .add-cart-btn:hover {
+        background: #dbeafe;
+      }
+
+      .cart-modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(15, 23, 42, 0.45);
+        z-index: 2100;
+        padding: 20px;
+      }
+
+      .cart-modal.show {
+        display: flex;
+      }
+
+      .cart-card {
+        width: min(560px, 100%);
+        max-height: 80vh;
+        overflow: auto;
+        border-radius: 14px;
+        background: #fff;
+        border: 1px solid var(--border);
+        padding: 16px;
+      }
+
+      .cart-title {
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 10px;
+      }
+
+      .cart-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px;
+        border: 1px solid #edf2f7;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: background 0.2s ease, border-color 0.2s ease;
+      }
+
+      .cart-item:hover {
+        background: #f8fafc;
+        border-color: #dbe4f0;
+      }
+
+      .cart-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .cart-item-empty {
+        padding: 10px 0;
+        color: #64748b;
+        font-size: 13px;
+      }
+
+      .cart-item-thumb {
+        width: 64px;
+        height: 64px;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        object-fit: contain;
+        flex-shrink: 0;
+      }
+
+      .cart-item-meta {
+        min-width: 0;
+        flex: 1;
+      }
+
+      .cart-item-actions {
+        display: flex;
+        align-items: center;
+      }
+
+      .cart-remove-btn {
+        border: 1px solid #fecaca;
+        background: #fef2f2;
+        color: #b91c1c;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .cart-remove-btn:hover {
+        background: #fee2e2;
+        border-color: #fca5a5;
+      }
+
+      .cart-item-name {
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.35;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .profile-modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(15, 23, 42, 0.45);
+        z-index: 2200;
+        padding: 20px;
+      }
+
+      .profile-modal.show {
+        display: flex;
+      }
+
+      .profile-card {
+        width: min(430px, 100%);
+        border-radius: 14px;
+        background: #fff;
+        border: 1px solid var(--border);
+        padding: 16px;
+      }
+
+      .profile-title {
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 10px;
+      }
+
+      .profile-row {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        gap: 8px;
+        padding: 8px 0;
+        border-bottom: 1px solid #edf2f7;
+      }
+
+      .profile-row:last-child {
+        border-bottom: none;
+      }
+
+      .profile-label {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 700;
+      }
+
+      .profile-value {
+        font-size: 14px;
+        color: #0f172a;
+        word-break: break-word;
+      }
+
+      .toast {
+        position: fixed;
+        top: 84px;
+        right: 22px;
+        z-index: 2600;
+        background: #16a34a;
+        color: #fff;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 13px;
+        font-weight: 700;
+        box-shadow: 0 10px 22px rgba(22, 163, 74, 0.25);
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .cart-item-brand {
+        font-size: 12px;
+        color: #64748b;
+      }
+
+      .icon-svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+      }
+
+      @media (hover: none) {
+        .img-box::before {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo" onclick="location.href = '/frontend/index.html'">
+        <div class="logo-box"></div>
+        Dealify
+      </div>
+      <div class="search-bar">
+        <svg class="icon-svg" style="color: var(--slate-400)" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" placeholder="Search for electronics..." />
+      </div>
+      <div class="user-icon" id="profileButton">
+        <svg class="icon-svg" viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <div id="profileMenu" class="profile-menu">
+          <div id="profileHead" class="profile-head" style="display:none">
+            <div id="profileName" class="profile-name"></div>
+            <div id="profileEmail" class="profile-email"></div>
+          </div>
+          <button class="profile-item" id="menuProfile" type="button" style="display:none">My Profile</button>
+          <button class="profile-item" id="menuCart" type="button">My Cart</button>
+          <button class="profile-item" id="menuSignin" type="button">Sign In</button>
+          <button class="profile-item" id="menuLogout" type="button" style="display:none">Logout</button>
+          <button class="profile-item" id="menuHome" type="button">Home</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="filters-container">
+      <button class="chip" id="chipAll" type="button" aria-label="All Products">
+        <svg class="chip-icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="M12 7v10"></path>
+          <path d="M7 12h10"></path>
+        </svg>
+        All
+      </button>
+      <button class="chip" id="chipReport" type="button" aria-label="Report Issue">
+        <svg class="chip-icon" viewBox="0 0 24 24">
+          <path d="M12 9v4"></path>
+          <path d="M12 17h.01"></path>
+          <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+        </svg>
+        Report Issue
+      </button>
+      <button class="chip" id="chipSmartphones" type="button" aria-label="Smartphones">
+        <svg class="chip-icon" viewBox="0 0 24 24">
+          <rect x="7" y="2" width="10" height="20" rx="2"></rect>
+          <line x1="11" y1="18" x2="13" y2="18"></line>
+        </svg>
+        Smartphones
+      </button>
+      <button class="chip" id="chipLaptops" type="button" aria-label="Laptops">
+        <svg class="chip-icon" viewBox="0 0 24 24">
+          <rect x="4" y="5" width="16" height="11" rx="1.5"></rect>
+          <path d="M2 19h20"></path>
+        </svg>
+        Laptops
+      </button>
+    </div>
+
+    <main class="grid-wrapper">
+      <p id="statusText" style="color: var(--slate-600); margin-bottom: 14px;"></p>
+      <div class="product-grid" id="productContainer"></div>
+    </main>
+
+    <a href="/frontend/index.html" class="home-float">Back Home</a>
+    <div class="chat-widget" id="chatWidget">
+      <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path>
+        <path d="M8 10h8"></path>
+        <path d="M8 14h5"></path>
+      </svg>
+    </div>
+
+    <div id="feedbackModal" class="feedback-modal">
+      <div class="feedback-card">
+        <div class="feedback-title">Share Feedback</div>
+        <div class="feedback-sub">Tell us what went wrong or what to improve.</div>
+        <input id="feedbackName" class="feedback-input" type="text" placeholder="Your name" />
+        <input id="feedbackEmail" class="feedback-input" type="email" placeholder="Your email" />
+        <textarea id="feedbackMessage" class="feedback-textarea" placeholder="Write your feedback..."></textarea>
+        <div class="feedback-actions">
+          <button id="feedbackCancel" class="btn-small" type="button">Cancel</button>
+          <button id="feedbackSend" class="btn-small primary" type="button">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cartModal" class="cart-modal">
+      <div class="cart-card">
+        <div class="cart-title">My Cart</div>
+        <div id="cartItems"></div>
+        <div class="feedback-actions" style="margin-top:10px">
+          <button id="cartClose" class="btn-small" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="profileModal" class="profile-modal">
+      <div class="profile-card">
+        <div class="profile-title">My Profile</div>
+        <div class="profile-row">
+          <div class="profile-label">Name</div>
+          <div id="profileModalName" class="profile-value">NA</div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-label">Email</div>
+          <div id="profileModalEmail" class="profile-value">NA</div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-label">User ID</div>
+          <div id="profileModalId" class="profile-value">NA</div>
+        </div>
+        <div class="feedback-actions" style="margin-top:12px">
+          <button id="profileClose" class="btn-small" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cartToast" class="toast">Added to cart</div>
+
+    <script>
+      const API_BASE = "http://localhost:5000/api";
+      const searchInput = document.querySelector(".search-bar input");
+      const container = document.getElementById("productContainer");
+      const statusText = document.getElementById("statusText");
+      const chipAll = document.getElementById("chipAll");
+      const chipReport = document.getElementById("chipReport");
+      const chipSmartphones = document.getElementById("chipSmartphones");
+      const chipLaptops = document.getElementById("chipLaptops");
+      const chatWidget = document.getElementById("chatWidget");
+      const feedbackModal = document.getElementById("feedbackModal");
+      const feedbackName = document.getElementById("feedbackName");
+      const feedbackEmail = document.getElementById("feedbackEmail");
+      const feedbackMessage = document.getElementById("feedbackMessage");
+      const feedbackSend = document.getElementById("feedbackSend");
+      const feedbackCancel = document.getElementById("feedbackCancel");
+      const profileButton = document.getElementById("profileButton");
+      const profileMenu = document.getElementById("profileMenu");
+      const profileHead = document.getElementById("profileHead");
+      const profileName = document.getElementById("profileName");
+      const profileEmail = document.getElementById("profileEmail");
+      const menuProfile = document.getElementById("menuProfile");
+      const menuCart = document.getElementById("menuCart");
+      const menuSignin = document.getElementById("menuSignin");
+      const menuLogout = document.getElementById("menuLogout");
+      const menuHome = document.getElementById("menuHome");
+      const cartModal = document.getElementById("cartModal");
+      const cartItems = document.getElementById("cartItems");
+      const cartClose = document.getElementById("cartClose");
+      const profileModal = document.getElementById("profileModal");
+      const profileModalName = document.getElementById("profileModalName");
+      const profileModalEmail = document.getElementById("profileModalEmail");
+      const profileModalId = document.getElementById("profileModalId");
+      const profileClose = document.getElementById("profileClose");
+      const cartToast = document.getElementById("cartToast");
+      const AUTH_TOKEN_KEY = "dealify_token";
+      const AUTH_USER_KEY = "dealify_user";
+      let latestResults = [];
+      let toastTimer = null;
+      let filterState = {
+        category: null,
+      };
+
+      function setStatus(message) {
+        statusText.textContent = message || "";
+      }
+
+      function toUserFriendlyError(error) {
+        const text = String(error?.message || error || "").toLowerCase();
+        if (
+          text.includes("econnreset") ||
+          text.includes("connection pool") ||
+          text.includes("mongo") ||
+          text.includes("temporary database connectivity issue")
+        ) {
+          return "Server is temporarily busy. Please retry in a few seconds.";
+        }
+        if (text.includes("failed to fetch") || text.includes("networkerror")) {
+          return "Network issue detected. Please check connection and retry.";
+        }
+        return String(error?.message || error || "Something went wrong.");
+      }
+
+      function getToken() {
+        return (
+          localStorage.getItem(AUTH_TOKEN_KEY) ||
+          localStorage.getItem("token") ||
+          localStorage.getItem("jwt") ||
+          sessionStorage.getItem(AUTH_TOKEN_KEY) ||
+          sessionStorage.getItem("token") ||
+          sessionStorage.getItem("jwt") ||
+          ""
+        );
+      }
+
+      function parseJwtPayload(token) {
+        try {
+          const part = token.split(".")[1];
+          if (!part) return null;
+          const json = atob(part.replace(/-/g, "+").replace(/_/g, "/"));
+          return JSON.parse(json);
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function getAuthUser() {
+        const fromStorage = localStorage.getItem(AUTH_USER_KEY);
+        if (fromStorage) {
+          try {
+            return JSON.parse(fromStorage);
+          } catch (error) {
+            // ignore parse errors
+          }
+        }
+        const fromSession = sessionStorage.getItem(AUTH_USER_KEY);
+        if (fromSession) {
+          try {
+            return JSON.parse(fromSession);
+          } catch (error) {
+            // ignore parse errors
+          }
+        }
+        const token = getToken();
+        if (!token) return null;
+        const payload = parseJwtPayload(token) || {};
+        return {
+          id: payload.id || null,
+          email: payload.email || "Signed User",
+          name: payload.email ? payload.email.split("@")[0] : "Signed User",
+        };
+      }
+
+      function showToast(message) {
+        if (!cartToast) return;
+        cartToast.textContent = message || "Added to cart";
+        cartToast.classList.add("show");
+        if (toastTimer) window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => {
+          cartToast.classList.remove("show");
+        }, 1600);
+      }
+
+      function updateProfileMenuState() {
+        const user = getAuthUser();
+        const loggedIn = Boolean(getToken() || user);
+        profileHead.style.display = loggedIn ? "block" : "none";
+        menuProfile.style.display = loggedIn ? "block" : "none";
+        menuCart.style.display = "block";
+        menuLogout.style.display = loggedIn ? "block" : "none";
+        menuSignin.style.display = loggedIn ? "none" : "block";
+
+        if (loggedIn) {
+          profileName.textContent = (user && user.name) || "Signed User";
+          profileEmail.textContent = (user && user.email) || "Logged in";
+        }
+      }
+
+      async function fetchCartItems() {
+        const token = getToken();
+        if (!token) return [];
+        const res = await fetch(`${API_BASE}/cart`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      }
+
+      async function removeCartItem(cartItemId) {
+        const token = getToken();
+        if (!token || !cartItemId) return false;
+
+        const res = await fetch(`${API_BASE}/cart/remove/${encodeURIComponent(cartItemId)}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.ok;
+      }
+
+      async function openCartModal() {
+        const token = getToken();
+        if (!token) {
+          window.location.href = "/frontend/modules/auth.html";
+          return;
+        }
+
+        cartItems.innerHTML = `<div class="cart-item-empty">Loading cart...</div>`;
+        cartModal.classList.add("show");
+        const items = await fetchCartItems();
+        if (!items.length) {
+          cartItems.innerHTML = `<div class="cart-item-empty">Your cart is empty.</div>`;
+          return;
+        }
+
+        cartItems.innerHTML = items
+          .map((item) => `
+            <div class="cart-item" data-product-id="${item.product_id || ""}">
+              <img class="cart-item-thumb" src="${item.image_url || "https://via.placeholder.com/100x100?text=No+Image"}" alt="${item.product_name || "Product"}" loading="lazy" />
+              <div class="cart-item-meta">
+                <div class="cart-item-name">${item.product_name || "Product"}</div>
+                <div class="cart-item-brand">${item.brand || "Unknown"}</div>
+              </div>
+              <div class="cart-item-actions">
+                <button class="cart-remove-btn" type="button" data-remove-cart-item="${item.cart_item_id || ""}">Remove</button>
+              </div>
+            </div>
+          `)
+          .join("");
+
+        cartItems.querySelectorAll(".cart-item[data-product-id]").forEach((row) => {
+          row.addEventListener("click", () => {
+            const productId = row.getAttribute("data-product-id");
+            if (!productId) return;
+            const q = encodeURIComponent(searchInput.value.trim());
+            window.location.href = `/frontend/modules/product.html?id=${encodeURIComponent(productId)}&q=${q}`;
+          });
+        });
+
+        cartItems.querySelectorAll("[data-remove-cart-item]").forEach((button) => {
+          button.addEventListener("click", async (event) => {
+            event.stopPropagation();
+            const cartItemId = button.getAttribute("data-remove-cart-item");
+            if (!cartItemId) return;
+            button.disabled = true;
+            const ok = await removeCartItem(cartItemId);
+            if (ok) {
+              showToast("Removed from cart");
+              openCartModal();
+              return;
+            }
+            button.disabled = false;
+            setStatus("Failed to remove item from cart.");
+          });
+        });
+      }
+
+      function openProfileModal() {
+        const user = getAuthUser();
+        if (!user) {
+          window.location.href = "/frontend/modules/auth.html";
+          return;
+        }
+        profileModalName.textContent = user.name || "Signed User";
+        profileModalEmail.textContent = user.email || "NA";
+        profileModalId.textContent = user.id || "NA";
+        profileModal.classList.add("show");
+      }
+
+      async function addToCart(productId) {
+        const token = getToken();
+        if (!token) {
+          setStatus("Please sign in to add items to cart.");
+          window.location.href = "/frontend/modules/auth.html";
+          return;
+        }
+
+        const res = await fetch(`${API_BASE}/cart/add`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ product_id: productId }),
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          setStatus(data?.message || data?.error || "Failed to add product to cart");
+          return;
+        }
+
+        setStatus("Product added to cart.");
+        showToast("Added to cart");
+      }
+
+      function toTitleCase(value) {
+        return String(value || "")
+          .toLowerCase()
+          .replace(/\b\w/g, (char) => char.toUpperCase());
+      }
+
+      function cleanProductName(name, brand) {
+        const raw = String(name || "").replace(/\s+/g, " ").trim();
+        if (!raw) return "Unnamed Product";
+
+        const primary = raw.split("|")[0].split(",")[0].trim();
+        const words = primary.split(" ").filter(Boolean);
+        const trimmed = words.slice(0, 8).join(" ");
+
+        if (!trimmed) return "Unnamed Product";
+
+        const branded = brand && !trimmed.toLowerCase().startsWith(String(brand).toLowerCase())
+          ? `${brand} ${trimmed}`
+          : trimmed;
+        return branded.replace(/\s+/g, " ").trim();
+      }
+
+      function getPlatformList(item) {
+        const fromPrices = Array.isArray(item?.prices)
+          ? item.prices.map((p) => p?.platform).filter(Boolean)
+          : [];
+        const fromPlatforms = Array.isArray(item?.platforms) ? item.platforms : [];
+        const fallback = item?.best_platform ? [item.best_platform] : [];
+        const names = [...fromPrices, ...fromPlatforms, ...fallback];
+
+        return Array.from(new Set(names.map((name) => String(name).toLowerCase().trim()).filter(Boolean)));
+      }
+
+      function matchesCategory(item, category) {
+        const normalizedCategory = String(item?.category || "").toLowerCase().trim();
+        const name = String(item?.product_name || "").toLowerCase();
+        const brand = String(item?.brand || "").toLowerCase();
+        const text = `${name} ${brand} ${normalizedCategory}`;
+
+        if (category === "smartphones") {
+          if (normalizedCategory === "mobile") return true;
+          if (["laptop", "laptop_accessories", "headphones", "bluetooth_speaker"].includes(normalizedCategory)) return false;
+          const phoneKeyword = /(smartphone|phone|mobile|iphone|galaxy|pixel|oneplus|oppo|vivo|realme|redmi|xiaomi|motorola|samsung)/i;
+          const nonPhoneKeyword = /(laptop|notebook|macbook|vivobook|charger|cable|cover|case|adapter|headphone|earbud|speaker|watch)/i;
+          return phoneKeyword.test(text) && !nonPhoneKeyword.test(text);
+        }
+
+        if (category === "laptops") {
+          if (normalizedCategory === "laptop") return true;
+          if (["mobile", "mobile_accessories", "headphones", "bluetooth_speaker"].includes(normalizedCategory)) return false;
+          const laptopKeyword = /(laptop|notebook|macbook|chromebook|vivobook|thinkpad|ideapad|zenbook|pavilion|aspire)/i;
+          const nonLaptopKeyword = /(phone|mobile|charger|cable|cover|case|adapter|headphone|earbud|speaker|watch)/i;
+          return laptopKeyword.test(text) && !nonLaptopKeyword.test(text);
+        }
+        return true;
+      }
+
+      function applyFilters(results) {
+        return results.filter((item) => {
+          if (filterState.category && !matchesCategory(item, filterState.category)) {
+            return false;
+          }
+          return true;
+        });
+      }
+
+      function updateChipState() {
+        chipAll.classList.toggle("active", !filterState.category);
+        chipSmartphones.classList.toggle("active", filterState.category === "smartphones");
+        chipLaptops.classList.toggle("active", filterState.category === "laptops");
+      }
+
+      function refreshFilteredView() {
+        const filtered = applyFilters(latestResults);
+        renderCards(filtered, searchInput.value.trim());
+
+        if (latestResults.length === 0) {
+          setStatus("No products loaded yet.");
+          return;
+        }
+
+        if (filtered.length === 0) {
+          setStatus("No products match selected filters.");
+          return;
+        }
+
+        setStatus(`Showing ${filtered.length} of ${latestResults.length} products.`);
+      }
+
+      function renderCards(results, query) {
+        if (!Array.isArray(results) || results.length === 0) {
+          container.innerHTML = '<p style="color:var(--slate-600)">No products found.</p>';
+          return;
+        }
+
+        container.innerHTML = results
+          .map((item) => {
+            const image = item.image_url || "https://via.placeholder.com/600x420?text=No+Image";
+            const brand = item.brand || "Unknown";
+            const displayName = cleanProductName(item.product_name, brand);
+            const platforms = getPlatformList(item);
+            const platformHtml = platforms.length
+              ? platforms.map((platform) => `<span class="platform-pill">${toTitleCase(platform)}</span>`).join("")
+              : '<span class="platform-pill">Unknown</span>';
+
+            return `
+              <article class="card" data-id="${item.product_id}">
+                <div class="img-box">
+                  <img src="${image}" class="product-img" alt="${item.product_name}" loading="lazy">
+                  <span class="image-cta">Open</span>
+                </div>
+                <div class="details">
+                  <div class="main-info">
+                    <span class="name">${displayName}</span>
+                  </div>
+                  <div class="sub-info">
+                    <span class="brand">${brand}</span>
+                  </div>
+                  <div class="footer-info">
+                    ${platformHtml}
+                  </div>
+                  <div class="card-actions">
+                    <button class="add-cart-btn" data-add-cart="${item.product_id}" type="button">Add to Cart</button>
+                  </div>
+                </div>
+              </article>
+            `;
+          })
+          .join("");
+
+        container.querySelectorAll(".card").forEach((card) => {
+          card.addEventListener("click", () => {
+            const productId = card.dataset.id;
+            window.location.href = `/frontend/modules/product.html?id=${encodeURIComponent(productId)}&q=${encodeURIComponent(query)}`;
+          });
+        });
+
+        container.querySelectorAll("[data-add-cart]").forEach((button) => {
+          button.addEventListener("click", (event) => {
+            event.stopPropagation();
+            const productId = button.getAttribute("data-add-cart");
+            addToCart(productId);
+          });
+        });
+      }
+
+      async function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      async function searchProducts(query) {
+        const q = String(query || "").trim();
+        if (!q) {
+          setStatus("Type a product and press Enter.");
+          container.innerHTML = "";
+          return;
+        }
+
+        setStatus(`Searching for "${q}"...`);
+        container.innerHTML = "";
+
+        const maxPolls = 12;
+        for (let attempt = 0; attempt < maxPolls; attempt += 1) {
+          const res = await fetch(`${API_BASE}/search?q=${encodeURIComponent(q)}`);
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data?.error || "Search failed");
+          }
+
+          if (Array.isArray(data.results) && data.results.length > 0) {
+            latestResults = data.results;
+            sessionStorage.setItem(
+              `dealify:search:${q.toLowerCase()}`,
+              JSON.stringify({
+                query: q,
+                results: data.results,
+                ts: Date.now(),
+              }),
+            );
+            setStatus(`Showing ${data.results.length} results for "${q}" (${data.source || "api"})`);
+            refreshFilteredView();
+            return;
+          }
+
+          if (data.status === "scraping_started") {
+            setStatus(`Fetching fresh deals for "${q}"... (${attempt + 1}/${maxPolls})`);
+            await sleep(2000);
+            continue;
+          }
+
+          setStatus(`No products found for "${q}".`);
+          renderCards([], q);
+          return;
+        }
+
+        setStatus("Search is taking longer than expected. Try again in a few seconds.");
+      }
+
+      async function loadProductsFromDb() {
+        setStatus("Loading products from database...");
+        container.innerHTML = "";
+
+        const res = await fetch(`${API_BASE}/products`);
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data?.error || "Failed to load products");
+        }
+
+        if (!Array.isArray(data) || data.length === 0) {
+          latestResults = [];
+          setStatus("No products in DB yet. Search a product to fetch fresh deals.");
+          renderCards([], "");
+          return;
+        }
+
+        latestResults = data;
+        setStatus(`Showing ${data.length} products from DB. Press Enter to search new products.`);
+        refreshFilteredView();
+      }
+
+      searchInput.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        searchProducts(searchInput.value).catch((error) => {
+          setStatus(toUserFriendlyError(error) || "Search failed");
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        function openFeedback() {
+          feedbackModal.classList.add("show");
+          feedbackMessage.focus();
+        }
+
+        function closeFeedback() {
+          feedbackModal.classList.remove("show");
+        }
+
+        chipReport.addEventListener("click", openFeedback);
+        chatWidget.addEventListener("click", openFeedback);
+        feedbackCancel.addEventListener("click", closeFeedback);
+
+        feedbackModal.addEventListener("click", (event) => {
+          if (event.target === feedbackModal) closeFeedback();
+        });
+
+        feedbackSend.addEventListener("click", () => {
+          const name = feedbackName.value.trim() || "Anonymous";
+          const email = feedbackEmail.value.trim() || "Not provided";
+          const message = feedbackMessage.value.trim();
+          if (!message) {
+            setStatus("Please write feedback before sending.");
+            return;
+          }
+
+          const subject = encodeURIComponent("Dealify Feedback");
+          const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nFeedback:\n${message}`);
+          window.location.href = `mailto:dealify.support@gmail.com?subject=${subject}&body=${body}`;
+          closeFeedback();
+          setStatus("Feedback draft opened in your mail app.");
+        });
+
+        profileButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          profileMenu.classList.toggle("show");
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!profileButton.contains(event.target)) {
+            profileMenu.classList.remove("show");
+          }
+        });
+
+        menuSignin.addEventListener("click", () => {
+          window.location.href = "/frontend/modules/auth.html";
+        });
+        menuProfile.addEventListener("click", () => {
+          profileMenu.classList.remove("show");
+          openProfileModal();
+        });
+        menuCart.addEventListener("click", () => {
+          profileMenu.classList.remove("show");
+          openCartModal();
+        });
+        menuLogout.addEventListener("click", () => {
+          localStorage.removeItem(AUTH_TOKEN_KEY);
+          localStorage.removeItem("token");
+          localStorage.removeItem("jwt");
+          localStorage.removeItem(AUTH_USER_KEY);
+          sessionStorage.removeItem(AUTH_TOKEN_KEY);
+          sessionStorage.removeItem("token");
+          sessionStorage.removeItem("jwt");
+          sessionStorage.removeItem(AUTH_USER_KEY);
+          updateProfileMenuState();
+          setStatus("Logged out successfully.");
+          profileMenu.classList.remove("show");
+        });
+        menuHome.addEventListener("click", () => {
+          window.location.href = "/frontend/index.html";
+        });
+        cartClose.addEventListener("click", () => {
+          cartModal.classList.remove("show");
+        });
+        cartModal.addEventListener("click", (event) => {
+          if (event.target === cartModal) cartModal.classList.remove("show");
+        });
+        profileClose.addEventListener("click", () => {
+          profileModal.classList.remove("show");
+        });
+        profileModal.addEventListener("click", (event) => {
+          if (event.target === profileModal) profileModal.classList.remove("show");
+        });
+
+        chipAll.addEventListener("click", () => {
+          filterState.category = null;
+          updateChipState();
+          refreshFilteredView();
+        });
+
+        chipSmartphones.addEventListener("click", () => {
+          filterState.category = filterState.category === "smartphones" ? null : "smartphones";
+          updateChipState();
+          refreshFilteredView();
+        });
+
+        chipLaptops.addEventListener("click", () => {
+          filterState.category = filterState.category === "laptops" ? null : "laptops";
+          updateChipState();
+          refreshFilteredView();
+        });
+
+        updateChipState();
+        updateProfileMenuState();
+        window.addEventListener("focus", updateProfileMenuState);
+        window.addEventListener("storage", updateProfileMenuState);
+        const params = new URLSearchParams(window.location.search);
+        const q = params.get("q") || "";
+
+        if (q) {
+          searchInput.value = q;
+          const cacheKey = `dealify:search:${q.toLowerCase()}`;
+          const cachedRaw = sessionStorage.getItem(cacheKey);
+          if (cachedRaw) {
+            try {
+              const cached = JSON.parse(cachedRaw);
+              if (Array.isArray(cached?.results) && cached.results.length > 0) {
+                latestResults = cached.results;
+                setStatus(`Showing previous results for "${q}". Press Enter to refresh.`);
+                refreshFilteredView();
+                return;
+              }
+            } catch (error) {
+              // ignore parse errors and do fresh search
+            }
+          }
+
+          searchProducts(q).catch((error) => {
+            setStatus(toUserFriendlyError(error) || "Search failed");
+          });
+        } else {
+          loadProductsFromDb().catch((error) => {
+            setStatus(toUserFriendlyError(error) || "Failed to load products");
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

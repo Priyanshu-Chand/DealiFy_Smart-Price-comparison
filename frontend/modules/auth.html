@@ -1,0 +1,321 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dealify | Authentication</title>
+    <style>
+        :root {
+            --sidebar-bg: #002333;
+            --accent-green: #00FF84;
+            --text-dark: #1e1e1e;
+            --text-gray: #6b7280;
+            --border-light: #e5e7eb;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f3f4f6;
+            overflow: hidden;
+        }
+
+        .auth-container {
+            width: 900px;
+            height: 600px;
+            background: white;
+            display: flex;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border-radius: 4px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 24px;
+            color: var(--text-gray);
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .sidebar {
+            flex: 1;
+            background-color: var(--sidebar-bg);
+            padding: 60px 40px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .sidebar h1 {
+            font-size: 32px;
+            line-height: 1.2;
+            margin-bottom: 15px;
+        }
+
+        .green-bar {
+            width: 80px;
+            height: 6px;
+            background-color: var(--accent-green);
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .sidebar p {
+            font-size: 16px;
+            color: #d1d5db;
+            max-width: 250px;
+        }
+
+        .form-side {
+            flex: 1.2;
+            padding: 60px 80px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .auth-view {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .auth-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .social-btn {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid var(--text-dark);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .social-icon { width: 20px; height: 20px; }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 25px 0;
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .divider:not(:empty)::before { margin-right: .5em; }
+        .divider:not(:empty)::after { margin-left: .5em; }
+
+        .input-group { margin-bottom: 20px; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-light);
+            outline: none;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--accent-green);
+            border: none;
+            color: var(--sidebar-bg);
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 25px;
+        }
+
+        .switch-text {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+
+        .switch-text span {
+            font-weight: 800;
+            color: #0000EE;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="close-btn" onclick="window.location.href='/frontend/index.html'">&times;</div>
+
+        <div class="sidebar">
+            <h1 id="sidebar-title">Welcome to Dealify</h1>
+            <div class="green-bar"></div>
+            <p id="sidebar-desc">Sign in to continue tracking your favorite products.</p>
+        </div>
+
+        <div class="form-side">
+            <div id="signin-view" class="auth-view active">
+                <div class="social-btn">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" class="social-icon">
+                    Continue with Google
+                </div>
+
+                <div class="divider">or</div>
+
+                <form id="signinForm" onsubmit="handleAuth(event, 'signin')">
+                    <div class="input-group">
+                        <input id="signinEmail" type="email" placeholder="Email address" required>
+                        <input id="signinPassword" type="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Sign In</button>
+                </form>
+
+                <p class="switch-text">Not a member yet? <span onclick="toggleAuth('signup')">Sign Up.</span></p>
+            </div>
+
+            <div id="signup-view" class="auth-view">
+                <div class="social-btn">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" class="social-icon">
+                    Sign up with Google
+                </div>
+
+                <div class="divider">or</div>
+
+                <form id="signupForm" onsubmit="handleAuth(event, 'signup')">
+                    <div class="input-group">
+                        <input id="signupName" type="text" placeholder="Full name" required>
+                        <input id="signupEmail" type="email" placeholder="Email address" required>
+                        <input id="signupPassword" type="password" placeholder="Create password" required>
+                    </div>
+                    <p style="font-size: 11px; color: var(--text-gray); margin-bottom: 20px;">
+                        By signing up you agree to Dealify's Terms of Service and Privacy Policy.
+                    </p>
+                    <button type="submit" class="submit-btn">Create Account</button>
+                </form>
+
+                <p class="switch-text">Already a member? <span onclick="toggleAuth('signin')">Sign In.</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://localhost:5000/api";
+        const AUTH_TOKEN_KEY = "dealify_token";
+        const AUTH_USER_KEY = "dealify_user";
+
+        function toggleAuth(view) {
+            const signinView = document.getElementById('signin-view');
+            const signupView = document.getElementById('signup-view');
+            const title = document.getElementById('sidebar-title');
+            const desc = document.getElementById('sidebar-desc');
+
+            if (view === 'signup') {
+                signinView.classList.remove('active');
+                signupView.classList.add('active');
+                title.innerText = "Join the Dealify Community";
+                desc.innerText = "Start saving money by comparing prices across the web instantly.";
+            } else {
+                signupView.classList.remove('active');
+                signinView.classList.add('active');
+                title.innerText = "Welcome Back to Dealify";
+                desc.innerText = "Sign in to continue tracking your favorite products.";
+            }
+        }
+
+        async function handleAuth(event, type) {
+            event.preventDefault();
+            try {
+                if (type === "signup") {
+                    const name = document.getElementById("signupName").value.trim();
+                    const email = document.getElementById("signupEmail").value.trim();
+                    const password = document.getElementById("signupPassword").value;
+
+                    const registerRes = await fetch(`${API_BASE}/auth/register`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ name, email, password }),
+                    });
+
+                    const registerData = await registerRes.json().catch(() => ({}));
+                    if (!registerRes.ok) {
+                        alert(registerData?.message || registerData?.error || "Sign Up failed");
+                        return;
+                    }
+                }
+
+                const email = type === "signin"
+                    ? document.getElementById("signinEmail").value.trim()
+                    : document.getElementById("signupEmail").value.trim();
+                const password = type === "signin"
+                    ? document.getElementById("signinPassword").value
+                    : document.getElementById("signupPassword").value;
+
+                const loginRes = await fetch(`${API_BASE}/auth/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const loginData = await loginRes.json().catch(() => ({}));
+                if (!loginRes.ok || !loginData?.token) {
+                    alert(loginData?.message || loginData?.error || "Sign In failed");
+                    return;
+                }
+
+                localStorage.setItem(AUTH_TOKEN_KEY, loginData.token);
+                localStorage.setItem("token", loginData.token);
+                sessionStorage.setItem(AUTH_TOKEN_KEY, loginData.token);
+                sessionStorage.setItem("token", loginData.token);
+                localStorage.setItem(AUTH_USER_KEY, JSON.stringify({
+                    email,
+                    name: type === "signup"
+                        ? document.getElementById("signupName").value.trim()
+                        : (email.split("@")[0] || "User"),
+                }));
+                sessionStorage.setItem(AUTH_USER_KEY, JSON.stringify({
+                    email,
+                    name: type === "signup"
+                        ? document.getElementById("signupName").value.trim()
+                        : (email.split("@")[0] || "User"),
+                }));
+
+                window.location.href = "/frontend/modules/main.html";
+            } catch (error) {
+                alert("Authentication failed. Please try again.");
+            }
+        }
+    </script>
+</body>
+</html>

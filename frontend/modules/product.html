@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dealify | Product Details</title>
+    <style>
+      :root {
+        --ink: #0f172a;
+        --muted: #64748b;
+        --line: #dbe4f0;
+        --surface: #f8fbff;
+        --white: #ffffff;
+        --blue: #1d4ed8;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", "Segoe UI", sans-serif;
+      }
+
+      body {
+        color: var(--ink);
+        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 40%);
+      }
+
+      .shell {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 26px 20px 80px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+      }
+
+      .back {
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--ink);
+        background: #fff;
+        padding: 10px 14px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+        gap: 22px;
+        margin-bottom: 22px;
+      }
+
+      .hero-image {
+        width: 100%;
+        aspect-ratio: 1.2 / 1;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #f1f5f9;
+      }
+
+      .hero-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        background: #fff;
+      }
+
+      .hero-details {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 18px;
+        background: #fff;
+        min-width: 0;
+      }
+
+      .title {
+        font-size: clamp(28px, 3vw, 34px);
+        line-height: 1.2;
+        margin-bottom: 8px;
+        overflow-wrap: anywhere;
+      }
+
+      .meta {
+        color: var(--muted);
+        margin-bottom: 16px;
+      }
+
+      .pill-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .details-block {
+        margin-top: 18px;
+      }
+
+      .details-block h3 {
+        margin-bottom: 12px;
+      }
+
+      .spec-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .spec-expand-wrap {
+        margin-top: 10px;
+      }
+
+      .spec-expand-btn {
+        border: none;
+        background: transparent;
+        color: #1d4ed8;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 0;
+        font-size: 13px;
+      }
+
+      .spec-section {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        overflow: hidden;
+      }
+
+      .spec-section summary {
+        list-style: none;
+        cursor: pointer;
+        user-select: none;
+        font-weight: 800;
+        font-size: 16px;
+        padding: 12px 14px;
+        background: #f8fafc;
+        border-bottom: 1px solid #e6edf6;
+      }
+
+      .spec-section summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .spec-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .spec-table td {
+        border: none;
+        border-bottom: 1px solid #eef2f7;
+        padding: 8px 10px;
+        font-size: 13px;
+        vertical-align: top;
+        overflow-wrap: anywhere;
+      }
+
+      .spec-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .spec-table td:first-child {
+        width: 45%;
+        color: #334155;
+        font-weight: 700;
+      }
+
+      .spec-table td:last-child {
+        color: #0f172a;
+      }
+
+      .pill {
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid #c7d8f8;
+        color: #1e3a8a;
+        background: #eff6ff;
+        font-weight: 700;
+        font-size: 13px;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #fff;
+        padding: 16px;
+        overflow: hidden;
+      }
+
+      .panel h3 {
+        margin-bottom: 12px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid #edf2f7;
+        padding: 10px 6px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 14px;
+        overflow-wrap: anywhere;
+      }
+
+      th {
+        color: var(--muted);
+        font-weight: 700;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      .price {
+        font-weight: 700;
+      }
+
+      .price-row-best td {
+        background: #f0fdf4;
+      }
+
+      .price-row-best td:first-child {
+        border-left: 2px solid #22c55e;
+      }
+
+      .price-row-best td:last-child {
+        border-right: 2px solid #22c55e;
+      }
+
+      .price-row-best td {
+        border-top: 2px solid #22c55e;
+        border-bottom: 2px solid #22c55e;
+      }
+
+      .link-btn {
+        display: inline-block;
+        text-decoration: none;
+        padding: 7px 12px;
+        border-radius: 8px;
+        border: 1px solid #bfdbfe;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+      }
+
+      .link-btn:hover {
+        background: #dbeafe;
+        border-color: #93c5fd;
+      }
+
+      .similar {
+        margin-top: 22px;
+      }
+
+      .similar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 14px;
+        margin-top: 12px;
+      }
+
+      .sim-card {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        cursor: pointer;
+        background: #fff;
+      }
+
+      .sim-card img {
+        width: 100%;
+        aspect-ratio: 1.3 / 1;
+        object-fit: contain;
+        background: #f1f5f9;
+      }
+
+      .sim-card .content {
+        padding: 10px;
+      }
+
+      .sim-card .name {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 4px;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 36px;
+        overflow-wrap: anywhere;
+      }
+
+      .sim-card .sub {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .sim-card .sub.price {
+        color: var(--ink);
+        font-weight: 700;
+        margin-top: 4px;
+      }
+
+      .status {
+        margin: 20px 0;
+        color: var(--muted);
+      }
+
+      @media (max-width: 980px) {
+        .hero,
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .spec-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <a id="backLink" class="back" href="/frontend/modules/main.html">Back to Results</a>
+      </div>
+
+      <p id="status" class="status">Loading product details...</p>
+
+      <section id="content" style="display:none">
+        <div class="hero">
+          <div class="hero-image">
+            <img id="heroImage" alt="Product image" />
+          </div>
+          <div class="hero-details">
+            <h1 id="title" class="title"></h1>
+            <p id="meta" class="meta"></p>
+            <div class="pill-row" id="pillRow"></div>
+            <div class="details-block">
+              <h3>Product Specs & Details</h3>
+              <div id="productSpecsGrid" class="spec-grid"></div>
+              <div class="spec-expand-wrap">
+                <button id="productSpecsToggle" class="spec-expand-btn" type="button" style="display:none">See more...</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <section class="panel">
+            <h3>Platform Price Comparison</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Platform</th>
+                  <th>Price</th>
+                  <th>Last Updated</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody id="priceRows"></tbody>
+            </table>
+          </section>
+
+          <section class="panel">
+            <h3>Cross-Platform Specs Snapshot</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Platform</th>
+                  <th>Rating</th>
+                  <th>Image</th>
+                  <th>Specs</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody id="specRows"></tbody>
+            </table>
+          </section>
+        </div>
+
+        <section class="similar">
+          <h3>Similar Products</h3>
+          <div id="similarGrid" class="similar-grid"></div>
+        </section>
+      </section>
+    </div>
+
+    <script>
+      const API_BASE = "http://localhost:5000/api";
+
+      function formatPrice(amount) {
+        const n = Number(amount);
+        if (!Number.isFinite(n) || n <= 0) return "Rs NA";
+        return `Rs ${Math.round(n).toLocaleString("en-IN")}`;
+      }
+
+      function formatDate(value) {
+        if (!value) return "NA";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "NA";
+        return date.toLocaleString();
+      }
+
+      function buildFallbackBuyUrl(platformName, productName) {
+        const platform = String(platformName || "").toLowerCase().trim();
+        const q = encodeURIComponent(String(productName || "").trim());
+        if (!q) return null;
+        if (platform === "amazon") return `https://www.amazon.in/s?k=${q}`;
+        if (platform === "flipkart") return `https://www.flipkart.com/search?q=${q}`;
+        if (platform === "ebay") return `https://www.ebay.com/sch/i.html?_nkw=${q}`;
+        if (platform === "snapdeal") return `https://www.snapdeal.com/search?keyword=${q}`;
+        return null;
+      }
+
+      function getBuyUrl(row, productName) {
+        const candidates = [
+          row?.product_url,
+          row?.link,
+          row?.url,
+          row?.buy_link,
+          row?.product_link,
+          row?.itemWebUrl,
+          row?.item_web_url,
+        ];
+        const direct = candidates.find((value) => /^https?:\/\//i.test(String(value || "").trim()));
+        return direct || buildFallbackBuyUrl(row?.platform_name, productName);
+      }
+
+      function summarizeSpecs(specs) {
+        if (!specs || typeof specs !== "object") return "NA";
+
+        const entries = Object.entries(specs)
+          .filter(([key, value]) => key !== "source" && value !== null && value !== undefined && String(value).trim() !== "")
+          .slice(0, 3)
+          .map(([key, value]) => `${key}: ${String(value)}`);
+
+        return entries.length ? entries.join(" | ") : "NA";
+      }
+
+      function formatRating(value) {
+        const n = Number(value);
+        if (!Number.isFinite(n) || n <= 0) return "NA";
+        if (n > 5) return "NA";
+        return n.toFixed(1).replace(/\.0$/, "");
+      }
+
+      function toReadableKey(value) {
+        const normalized = String(value || "").trim().toLowerCase();
+        if (normalized === "storage") return "Storage / RAM";
+
+        return String(value || "")
+          .replace(/[_-]+/g, " ")
+          .replace(/\s+/g, " ")
+          .trim()
+          .replace(/\b\w/g, (char) => char.toUpperCase());
+      }
+
+      function normalizeSpecValue(value) {
+        if (Array.isArray(value)) {
+          return value.map((item) => String(item)).filter(Boolean).join(", ");
+        }
+        if (value && typeof value === "object") {
+          return Object.entries(value)
+            .slice(0, 4)
+            .map(([k, v]) => `${toReadableKey(k)}: ${String(v)}`)
+            .join(", ");
+        }
+        return String(value);
+      }
+
+      function isMeaningfulSpec(value) {
+        if (value === null || value === undefined) return false;
+        const text = String(value).trim().toLowerCase();
+        if (!text || text === "na" || text === "null" || text === "undefined") return false;
+        return true;
+      }
+
+      function extractSpecsFromTitle(title) {
+        const source = String(title || "").replace(/\s+/g, " ").trim();
+        const parsed = {
+          model_name: source.split(",")[0]?.trim() || source,
+        };
+
+        const patterns = [
+          ["processor", /(intel[^,]*|amd[^,]*|apple\s*[am]\d[^,]*|snapdragon[^,]*)/i],
+          ["ram", /(\d+\s*gb\s*ram)/i],
+          ["storage", /(\d+\s*(tb|gb)\s*(ssd|hdd|storage)?)/i],
+          ["display", /(fhd|qhd|uhd|oled|amoled|retina|lcd|ips|super retina[^,]*)/i],
+          ["screen_size", /(\d{1,2}(\.\d+)?\s*\"|\d{1,2}(\.\d+)?\s*inch(?:es)?)/i],
+          ["operating_system", /(windows\s*\d+[^,]*|ios|android|macos|chrome\s*os)/i],
+          ["color", /(silver|black|blue|white|grey|gray|green|gold|red|pink|deep blue|cool silver)/i],
+          ["weight", /(\d+(\.\d+)?\s*kg)/i],
+          ["model_number", /([a-z0-9]{3,}-[a-z0-9-]{3,})/i],
+        ];
+
+        for (const [key, regex] of patterns) {
+          const match = source.match(regex);
+          if (match?.[1]) parsed[key] = match[1].trim();
+          else if (match?.[0]) parsed[key] = match[0].trim();
+        }
+
+        return parsed;
+      }
+
+      function buildMergedSpecs(detail, titleSpecs = {}) {
+        const merged = {};
+
+        Object.entries(titleSpecs).forEach(([key, value]) => {
+          if (key === "model_name") return;
+          if (isMeaningfulSpec(value)) merged[key] = normalizeSpecValue(value);
+        });
+
+        const baseSpecs = detail?.specs && typeof detail.specs === "object" ? detail.specs : {};
+        Object.entries(baseSpecs).forEach(([key, value]) => {
+          if (key === "source") return;
+          if (isMeaningfulSpec(value)) merged[key] = normalizeSpecValue(value);
+        });
+
+        const platforms = Array.isArray(detail?.platforms) ? detail.platforms : [];
+        for (const platform of platforms) {
+          const pSpecs = platform?.specs && typeof platform.specs === "object" ? platform.specs : {};
+          for (const [key, value] of Object.entries(pSpecs)) {
+            if (key === "source") continue;
+            if (!isMeaningfulSpec(value)) continue;
+            if (!merged[key]) merged[key] = normalizeSpecValue(value);
+          }
+        }
+
+        return merged;
+      }
+
+      function categorizeSpecKey(key) {
+        const k = String(key || "").toLowerCase();
+        if (/(display|screen|resolution|pixel|ppi)/.test(k)) return "Display";
+        if (/(network|wifi|wireless|bluetooth|sim|connector|usb|carrier|connect)/.test(k)) return "Connectivity";
+        if (/(camera|photo|video|lens|sensor|front|rear)/.test(k)) return "Camera";
+        if (/(battery|charging|power)/.test(k)) return "Battery";
+        if (/(storage|memory|ram|rom|capacity)/.test(k)) return "Storage";
+        if (/(processor|cpu|chip|soc|speed|performance|core|gpu)/.test(k)) return "Performance";
+        return "Additional details";
+      }
+
+      function renderProductSpecs(detail, titleSpecs = {}) {
+        const gridEl = document.getElementById("productSpecsGrid");
+        const toggleEl = document.getElementById("productSpecsToggle");
+        const merged = buildMergedSpecs(detail, titleSpecs);
+        const grouped = new Map();
+
+        Object.entries(merged).forEach(([key, value]) => {
+          const category = categorizeSpecKey(key);
+          if (!grouped.has(category)) grouped.set(category, []);
+          grouped.get(category).push([toReadableKey(key), value]);
+        });
+
+        const baseFacts = [
+          ["Model Name", titleSpecs?.model_name || "NA"],
+          ["Brand", detail?.brand || "NA"],
+          ["Category", detail?.category || "NA"],
+          ["Search Terms", Array.isArray(detail?.search_terms) ? detail.search_terms.slice(0, 3).join(", ") : "NA"],
+        ].filter(([, value]) => isMeaningfulSpec(value));
+
+        if (!grouped.has("Item details")) grouped.set("Item details", []);
+        grouped.set("Item details", [...baseFacts, ...grouped.get("Item details")]);
+
+        const order = [
+          "Additional details",
+          "Display",
+          "Connectivity",
+          "Camera",
+          "Battery",
+          "Storage",
+          "Performance",
+          "Item details",
+        ];
+
+        const sectionHtml = [];
+        const sectionData = [];
+        order.forEach((category) => {
+          const rows = grouped.get(category) || [];
+          if (!rows.length) return;
+          sectionData.push({
+            category,
+            rows: rows.slice(0, 14),
+          });
+        });
+
+        if (!sectionData.length) {
+          gridEl.innerHTML = `
+            <details class="spec-section" open>
+              <summary>Additional details</summary>
+              <table class="spec-table"><tr><td>Specs</td><td>Not available yet</td></tr></table>
+            </details>
+          `;
+          toggleEl.style.display = "none";
+          return;
+        }
+
+        const previewSections = 2;
+        const previewRows = 3;
+        let expanded = false;
+
+        const needsToggle =
+          sectionData.length > previewSections ||
+          sectionData.some((section) => section.rows.length > previewRows);
+
+        function renderExpandedState() {
+          const visibleSections = expanded ? sectionData : sectionData.slice(0, previewSections);
+          const html = [];
+
+          visibleSections.forEach((section) => {
+            const rows = expanded ? section.rows : section.rows.slice(0, previewRows);
+            const rowsHtml = rows
+              .map(([key, value]) => `<tr><td>${key}</td><td>${value}</td></tr>`)
+              .join("");
+
+            html.push(`
+              <details class="spec-section" open>
+                <summary>${section.category}</summary>
+                <table class="spec-table">${rowsHtml}</table>
+              </details>
+            `);
+          });
+
+          gridEl.innerHTML = html.join("");
+
+          if (needsToggle) {
+            toggleEl.style.display = "inline-block";
+            toggleEl.textContent = expanded ? "See less" : "See more...";
+          } else {
+            toggleEl.style.display = "none";
+          }
+        }
+
+        renderExpandedState();
+        toggleEl.onclick = () => {
+          expanded = !expanded;
+          renderExpandedState();
+        };
+      }
+
+      function renderDetail(detail, comparison) {
+        const titleSpecs = extractSpecsFromTitle(detail.product_name);
+        document.getElementById("heroImage").src =
+          detail.image_url || detail.platforms?.[0]?.image_url || "https://via.placeholder.com/700x500?text=No+Image";
+        document.getElementById("title").textContent = titleSpecs.model_name || detail.product_name || "Product";
+        document.getElementById("meta").textContent = `${detail.brand || "Unknown"} | ${detail.category || "other"}`;
+
+        const comparisonPrices = Array.isArray(comparison?.all_prices) ? comparison.all_prices : [];
+        const fallbackPrices = Array.isArray(detail?.platforms)
+          ? detail.platforms
+              .map((platform) => ({
+                platform_name: platform.platform_name,
+                price: Number(platform.price),
+                product_url: getBuyUrl(platform, detail.product_name),
+                rating: platform.rating ?? null,
+                last_updated: platform.last_updated || null,
+                image_url: platform.image_url || null,
+                source: platform.source || platform.specs?.source || null,
+                specs: platform.specs || {},
+              }))
+              .filter((row) => Number.isFinite(row.price) && row.price > 0)
+          : [];
+        const sourcePrices = [...comparisonPrices, ...fallbackPrices];
+        const byPlatform = new Map();
+        sourcePrices.forEach((row) => {
+          const platformName = String(row?.platform_name || "").toLowerCase().trim();
+          const price = Number(row?.price);
+          if (!platformName || !Number.isFinite(price) || price <= 0) return;
+          const current = byPlatform.get(platformName);
+          if (!current || Number(price) < Number(current.price)) {
+            byPlatform.set(platformName, row);
+          }
+        });
+
+        const availablePrices = Array.from(byPlatform.values()).sort((a, b) => Number(a.price) - Number(b.price));
+        const cheapest = availablePrices[0] || null;
+        const preferredPlatforms = ["amazon", "flipkart", "ebay", "snapdeal"];
+        const priceRows = preferredPlatforms.map((platformName) => {
+          const existing = byPlatform.get(platformName);
+          if (existing) return existing;
+          return {
+            platform_name: platformName,
+            price: null,
+            product_url: null,
+            last_updated: null,
+            unavailable: true,
+          };
+        });
+        const extraRows = Array.from(byPlatform.entries())
+          .filter(([platformName]) => !preferredPlatforms.includes(platformName))
+          .map(([, row]) => row);
+        const prices = [...priceRows, ...extraRows];
+
+        document.getElementById("pillRow").innerHTML = [
+          `<span class="pill">Best Platform: ${cheapest?.platform_name || "NA"}</span>`,
+          `<span class="pill">Best Price: ${formatPrice(cheapest?.price)}</span>`,
+          `<span class="pill">Platforms: ${prices.length}</span>`,
+        ].join("");
+
+        document.getElementById("priceRows").innerHTML = prices
+          .map(
+            (row) => `
+            <tr class="${cheapest && String(row.platform_name).toLowerCase() === String(cheapest.platform_name).toLowerCase() && Number(row.price) === Number(cheapest.price) ? "price-row-best" : ""}">
+              <td>${row.platform_name || "NA"}</td>
+              <td class="price">${Number.isFinite(Number(row.price)) && Number(row.price) > 0 ? formatPrice(row.price) : "Not available"}</td>
+              <td>${row.unavailable ? "Not available" : formatDate(row.last_updated)}</td>
+              <td>${row.unavailable ? "Not available" : (getBuyUrl(row, row.matched_product_name || detail.product_name) ? `<a class="link-btn" href="${getBuyUrl(row, row.matched_product_name || detail.product_name)}" target="_blank" rel="noreferrer">Open</a>` : "Not available")}</td>
+            </tr>
+          `,
+          )
+          .join("") || '<tr><td colspan="4">No platform prices available</td></tr>';
+
+        const comparisonPlatforms = Array.isArray(comparison?.all_prices) ? comparison.all_prices : [];
+        const specsRows = comparisonPlatforms.length > 0
+          ? comparisonPlatforms
+          : (Array.isArray(detail.platforms) ? detail.platforms : []);
+
+        document.getElementById("specRows").innerHTML =
+          specsRows
+            .map(
+              (platform) => `
+                <tr>
+                  <td>${platform.platform_name || "NA"}</td>
+                  <td>${formatRating(platform.rating)}</td>
+                  <td>${platform.image_url ? "Available" : "NA"}</td>
+                  <td>${summarizeSpecs(platform.specs)}</td>
+                  <td>${platform.source || platform.specs?.source || "db"}</td>
+                </tr>
+              `,
+            )
+            .join("") || '<tr><td colspan="5">No platform specs available yet</td></tr>';
+
+        renderProductSpecs(detail, titleSpecs);
+
+      }
+
+      function scoreSimilarity(baseName, candidateName) {
+        const a = baseName.toLowerCase().split(/\s+/).filter(Boolean);
+        const b = candidateName.toLowerCase().split(/\s+/).filter(Boolean);
+        const overlap = a.filter((token) => b.includes(token)).length;
+        return overlap;
+      }
+
+      function getAnyProductId(item) {
+        return item?.product_id || item?._id || item?.id || null;
+      }
+
+      function renderSimilarProducts(allProducts, currentId, query, currentName) {
+        const grid = document.getElementById("similarGrid");
+        const qTokens = String(query || "").toLowerCase().split(/\s+/).filter(Boolean);
+        const normalized = (Array.isArray(allProducts) ? allProducts : [])
+          .map((item) => {
+            const productId = getAnyProductId(item);
+            return {
+              ...item,
+              product_id: productId ? String(productId) : null,
+              product_name: String(item?.product_name || ""),
+              brand: String(item?.brand || ""),
+              category: String(item?.category || "").toLowerCase(),
+            };
+          })
+          .filter((item) => item.product_id);
+
+        const current = normalized.find((item) => String(item.product_id) === String(currentId)) || null;
+        const currentCategory = String(current?.category || "").toLowerCase();
+        const currentBrand = String(current?.brand || "").toLowerCase();
+
+        const ranked = normalized
+          .filter((item) => String(item.product_id) !== String(currentId))
+          .map((item) => {
+            const name = String(item.product_name || "");
+            const nameLower = name.toLowerCase();
+            const brandLower = String(item.brand || "").toLowerCase();
+            const categoryLower = String(item.category || "").toLowerCase();
+            const byQuery = qTokens.some((token) => nameLower.includes(token)) ? 2 : 0;
+            const byName = scoreSimilarity(currentName, name);
+            const byCategory = currentCategory && categoryLower === currentCategory ? 2 : 0;
+            const byBrand = currentBrand && brandLower === currentBrand ? 1 : 0;
+            return { item, score: byQuery + byName + byCategory + byBrand };
+          })
+          .sort((a, b) => b.score - a.score);
+
+        const positiveRanked = ranked
+          .filter((entry) => entry.score > 0)
+          .slice(0, 16)
+          .map((entry) => entry.item);
+        const fallbackRanked = ranked
+          .slice(0, 16)
+          .map((entry) => entry.item);
+        const finalItems = positiveRanked.length ? positiveRanked : fallbackRanked;
+
+        if (!finalItems.length) {
+          grid.innerHTML = '<div class="status">No similar products found in DB yet.</div>';
+          return;
+        }
+
+        grid.innerHTML = finalItems
+          .map(
+            (item) => `
+            <article class="sim-card" data-id="${item.product_id}">
+              <img src="${item.image_url || "https://via.placeholder.com/500x380?text=No+Image"}" alt="${item.product_name}" loading="lazy" />
+              <div class="content">
+                <div class="name">${item.product_name}</div>
+                <div class="sub">${item.brand || "Unknown"}</div>
+                <div class="sub price">${formatPrice(item.best_price)}</div>
+              </div>
+            </article>
+          `,
+          )
+          .join("");
+
+        grid.querySelectorAll(".sim-card").forEach((card) => {
+          card.addEventListener("click", () => {
+            const id = card.dataset.id;
+            const q = encodeURIComponent(query || "");
+            window.location.href = `/frontend/modules/product.html?id=${encodeURIComponent(id)}&q=${q}`;
+          });
+        });
+      }
+
+      async function init() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+        const q = params.get("q") || "";
+
+        document.getElementById("backLink").href = `/frontend/modules/main.html?q=${encodeURIComponent(q)}`;
+
+        if (!id) {
+          document.getElementById("status").textContent = "Missing product id";
+          return;
+        }
+
+        const detailRes = await fetch(`${API_BASE}/products/${encodeURIComponent(id)}`);
+        if (!detailRes.ok) throw new Error("Failed to load product details");
+
+        const detail = await detailRes.json();
+        const emptyComparison = { cheapest_platform: null, cheapest_price: null, all_prices: [] };
+        renderDetail(detail, emptyComparison);
+        document.getElementById("status").style.display = "none";
+        document.getElementById("content").style.display = "block";
+
+        const comparisonPromise = fetch(`${API_BASE}/products/${encodeURIComponent(id)}/comparison`)
+          .then((res) => (res.ok ? res.json() : emptyComparison))
+          .catch(() => emptyComparison);
+
+        const allProductsPromise = fetch(`${API_BASE}/products`)
+          .then((res) => (res.ok ? res.json() : []))
+          .then((payload) => {
+            if (Array.isArray(payload)) return payload;
+            if (Array.isArray(payload?.results)) return payload.results;
+            if (Array.isArray(payload?.data)) return payload.data;
+            return [];
+          })
+          .catch(() => []);
+
+        const [comparison, allProducts] = await Promise.all([comparisonPromise, allProductsPromise]);
+        renderDetail(detail, comparison);
+        renderSimilarProducts(allProducts, id, q, detail.product_name || "");
+      }
+
+      init().catch((error) => {
+        document.getElementById("status").textContent = error.message;
+      });
+    </script>
+  </body>
+</html>

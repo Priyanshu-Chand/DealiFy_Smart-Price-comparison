@@ -1,23 +1,26 @@
-//Handles database queries related to users.
+const User = require("./mongo/User");
 
-const db = require("../config/db");
+const mapUserRow = (doc) => ({
+  user_id: String(doc._id),
+  name: doc.name,
+  email: doc.email,
+  password_hash: doc.password_hash,
+});
 
-const createUser = (name, email, passwordHash) => {
-  const sql = `
-    INSERT INTO users (name, email, password_hash)
-    VALUES (?, ?, ?)
-  `;
-  return db.promise().query(sql, [name, email, passwordHash]);
+const createUser = async (name, email, passwordHash) => {
+  const created = await User.create({
+    name,
+    email: String(email || "").toLowerCase().trim(),
+    password_hash: passwordHash,
+  });
+
+  return [{ insertId: String(created._id) }];
 };
 
-const findUserByEmail = (email) => {
-  const sql = `
-    SELECT * FROM users WHERE email = ?
-  `;
-  return db.promise().query(sql, [email]);
+const findUserByEmail = async (email) => {
+  const normalized = String(email || "").toLowerCase().trim();
+  const user = await User.findOne({ email: normalized }).lean();
+  return [user ? [mapUserRow(user)] : []];
 };
 
-module.exports = {
-  createUser,
-  findUserByEmail,
-};
+module.exports = { createUser, findUserByEmail };
