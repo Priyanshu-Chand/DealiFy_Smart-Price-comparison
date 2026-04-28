@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -177,7 +177,7 @@
 <body>
 
     <div class="auth-container">
-        <div class="close-btn" onclick="window.location.href='/frontend/index.html'">&times;</div>
+        <div class="close-btn" onclick="window.location.href='/index.html'">&times;</div>
 
         <div class="sidebar">
             <h1 id="sidebar-title">Welcome to Dealify</h1>
@@ -311,7 +311,7 @@
                         : (email.split("@")[0] || "User"),
                 }));
 
-                window.location.href = "/frontend/modules/main.html";
+                window.location.href = "/modules/main.html";
             } catch (error) {
                 alert("Authentication failed. Please try again.");
             }
@@ -319,3 +319,4 @@
     </script>
 </body>
 </html>
+

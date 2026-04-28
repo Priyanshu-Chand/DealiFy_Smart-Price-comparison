@@ -341,7 +341,7 @@
   <body>
     <div class="shell">
       <div class="topbar">
-        <a id="backLink" class="back" href="/frontend/modules/main.html">Back to Results</a>
+        <a id="backLink" class="back" href="/modules/main.html">Back to Results</a>
       </div>
 
       <p id="status" class="status">Loading product details...</p>
@@ -406,7 +406,15 @@
     </div>
 
     <script>
-      const API_BASE = "http://localhost:5000/api";
+      const API_BASE = (() => {
+        const custom = (window.DEALIFY_API_BASE || "").trim();
+        if (custom) return custom.replace(/\/$/, "");
+        const host = window.location.hostname;
+        if (host === "localhost" || host === "127.0.0.1") {
+          return "http://localhost:5000/api";
+        }
+        return "https://dealify-smart-price-comparison.onrender.com/api";
+      })();
 
       function formatPrice(amount) {
         const n = Number(amount);
@@ -833,7 +841,7 @@
           card.addEventListener("click", () => {
             const id = card.dataset.id;
             const q = encodeURIComponent(query || "");
-            window.location.href = `/frontend/modules/product.html?id=${encodeURIComponent(id)}&q=${q}`;
+            window.location.href = `/modules/product.html?id=${encodeURIComponent(id)}&q=${q}`;
           });
         });
       }
@@ -843,7 +851,7 @@
         const id = params.get("id");
         const q = params.get("q") || "";
 
-        document.getElementById("backLink").href = `/frontend/modules/main.html?q=${encodeURIComponent(q)}`;
+        document.getElementById("backLink").href = `/modules/main.html?q=${encodeURIComponent(q)}`;
 
         if (!id) {
           document.getElementById("status").textContent = "Missing product id";
@@ -884,3 +892,4 @@
     </script>
   </body>
 </html>
+

@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -652,7 +652,7 @@
   </head>
   <body>
     <header>
-      <div class="logo" onclick="location.href = '/frontend/index.html'">
+      <div class="logo" onclick="location.href = '/index.html'">
         <div class="logo-box"></div>
         Dealify
       </div>
@@ -720,7 +720,7 @@
       <div class="product-grid" id="productContainer"></div>
     </main>
 
-    <a href="/frontend/index.html" class="home-float">Back Home</a>
+    <a href="/index.html" class="home-float">Back Home</a>
     <div class="chat-widget" id="chatWidget">
       <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path>
@@ -939,7 +939,7 @@
       async function openCartModal() {
         const token = getToken();
         if (!token) {
-          window.location.href = "/frontend/modules/auth.html";
+          window.location.href = "/modules/auth.html";
           return;
         }
 
@@ -971,7 +971,7 @@
             const productId = row.getAttribute("data-product-id");
             if (!productId) return;
             const q = encodeURIComponent(searchInput.value.trim());
-            window.location.href = `/frontend/modules/product.html?id=${encodeURIComponent(productId)}&q=${q}`;
+            window.location.href = `/modules/product.html?id=${encodeURIComponent(productId)}&q=${q}`;
           });
         });
 
@@ -996,7 +996,7 @@
       function openProfileModal() {
         const user = getAuthUser();
         if (!user) {
-          window.location.href = "/frontend/modules/auth.html";
+          window.location.href = "/modules/auth.html";
           return;
         }
         profileModalName.textContent = user.name || "Signed User";
@@ -1009,7 +1009,7 @@
         const token = getToken();
         if (!token) {
           setStatus("Please sign in to add items to cart.");
-          window.location.href = "/frontend/modules/auth.html";
+          window.location.href = "/modules/auth.html";
           return;
         }
 
@@ -1165,7 +1165,7 @@
         container.querySelectorAll(".card").forEach((card) => {
           card.addEventListener("click", () => {
             const productId = card.dataset.id;
-            window.location.href = `/frontend/modules/product.html?id=${encodeURIComponent(productId)}&q=${encodeURIComponent(query)}`;
+            window.location.href = `/modules/product.html?id=${encodeURIComponent(productId)}&q=${encodeURIComponent(query)}`;
           });
         });
 
@@ -1307,7 +1307,7 @@
         });
 
         menuSignin.addEventListener("click", () => {
-          window.location.href = "/frontend/modules/auth.html";
+          window.location.href = "/modules/auth.html";
         });
         menuProfile.addEventListener("click", () => {
           profileMenu.classList.remove("show");
@@ -1331,7 +1331,7 @@
           profileMenu.classList.remove("show");
         });
         menuHome.addEventListener("click", () => {
-          window.location.href = "/frontend/index.html";
+          window.location.href = "/index.html";
         });
         cartClose.addEventListener("click", () => {
           cartModal.classList.remove("show");
@@ -1401,3 +1401,4 @@
     </script>
   </body>
 </html>
+
