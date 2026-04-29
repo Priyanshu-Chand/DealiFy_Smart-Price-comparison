@@ -777,7 +777,15 @@
     <div id="cartToast" class="toast">Added to cart</div>
 
     <script>
-      const API_BASE = "http://localhost:5000/api";
+      const API_BASE = (() => {
+        const custom = (window.DEALIFY_API_BASE || "").trim();
+        if (custom) return custom.replace(/\/$/, "");
+        const host = window.location.hostname;
+        if (host === "localhost" || host === "127.0.0.1") {
+          return "http://localhost:5000/api";
+        }
+        return "https://dealify-smart-price-comparison.onrender.com/api";
+      })();
       const searchInput = document.querySelector(".search-bar input");
       const container = document.getElementById("productContainer");
       const statusText = document.getElementById("statusText");
