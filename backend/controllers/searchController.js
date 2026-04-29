@@ -53,7 +53,7 @@ const normalizeQuery = (query) => query.toLowerCase().replace(/\s+/g, " ").trim(
 
 const search = async (req, res) => {
   try {
-    let query = req.query.q;
+    let query = req.query.q || req.query.query;
 
     if (!query) {
       return res.status(400).json({ message: "Search query required" });
