@@ -923,5 +923,179 @@ font-size: 20px;
 }
 
 
+/* ================= HERO RESPONSIVE FIX ================= */
+
+@media (max-width: 768px) {
+
+.page-section {
+position: static !important;
+display: flex !important;
+flex-direction: column;   /* 🔥 stack vertically */
+gap: 20px;
+padding: 20px 5%;
+height: auto;
+}
+
+.hero-content {
+max-width: 100%;
+text-align: center;
+}
+
+.hero-content h1 {
+font-size: 28px;
+line-height: 1.2;
+}
+
+.hero-content p {
+font-size: 14px;
+}
+
+.hero-visual {
+justify-content: center;
+}
+
+.video-frame {
+max-width: 100%;
+border-radius: 16px;
+}
+
+.btn-explore {
+width: 100%;
+}
+}
+
+/* Extra small phones */
+@media (max-width: 480px) {
+
+.hero-content h1 {
+font-size: 24px;
+}
+
+.hero-content p {
+font-size: 13px;
+}
+
+.scan-badge {
+font-size: 9px;
+padding: 6px 10px;
+}
+}
+
+
+/* ================= GLOBAL RESPONSIVE SYSTEM ================= */
+
+/* Fix all containers */
+.container,
+.auth-container,
+.content-wrapper,
+.page-section {
+width: 100%;
+max-width: 1200px;
+margin: auto;
+}
+
+/* ================= AUTH PAGE FIX ================= */
+
+@media (max-width: 900px) {
+
+.auth-container {
+flex-direction: column !important;
+width: 90% !important;
+height: auto !important;
+margin: auto;
+}
+
+.sidebar {
+width: 100% !important;
+padding: 30px 20px;
+text-align: center;
+}
+
+.form-side {
+width: 100% !important;
+padding: 30px 20px;
+}
+
+.sidebar h1 {
+font-size: 22px;
+}
+
+.sidebar p {
+font-size: 14px;
+}
+}
+
+/* ================= HERO (HOME PAGE) ================= */
+
+@media (max-width: 768px) {
+
+.page-section {
+position: static !important;
+display: flex !important;
+flex-direction: column !important;
+gap: 20px;
+padding: 20px 5%;
+}
+
+.hero-content {
+text-align: center;
+}
+
+.hero-visual {
+justify-content: center;
+}
+}
+
+/* ================= GRID FIX ================= */
+
+@media (max-width: 768px) {
+.product-grid {
+grid-template-columns: repeat(2, 1fr) !important;
+}
+}
+
+@media (max-width: 480px) {
+.product-grid {
+grid-template-columns: 1fr !important;
+}
+}
+
+/* ================= NAVBAR FIX ================= */
+
+@media (max-width: 768px) {
+
+.navbar {
+flex-direction: column;
+align-items: flex-start;
+gap: 10px;
+}
+
+.nav-links {
+flex-wrap: wrap;
+gap: 10px;
+}
+}
+
+/* ================= FLOAT BUTTONS ================= */
+
+@media (max-width: 480px) {
+
+.chat-widget {
+width: 50px;
+height: 50px;
+font-size: 20px;
+bottom: 20px;
+right: 20px;
+}
+
+.home-float {
+bottom: 20px;
+left: 20px;
+font-size: 12px;
+padding: 10px 14px;
+}
+}
+
+
 
 
