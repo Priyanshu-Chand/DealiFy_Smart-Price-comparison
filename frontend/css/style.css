@@ -20,8 +20,8 @@
 
   body {
     width: 100%;
-    height: 100vh;
-    overflow: hidden; /* Prevents scrolling - Fit to page */
+    min-height: 100vh;
+    overflow-x: hidden; /* Prevents scrolling - Fit to page */
     display: flex;
     flex-direction: column;
     background-color: var(--bg-white);
@@ -810,6 +810,117 @@ input:focus { border-color: var(--text-dark); }
     }
 }
 
+/* ========================= */
+/* 🔥 RESPONSIVE PATCH (ADD AT END) */
+/* ========================= */
+
+/* Fix global issues */
+body {
+overflow-x: hidden;
+}
+
+/* Fix product grid responsiveness */
+.product-grid {
+grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+gap: 20px !important;
+}
+
+/* Fix images */
+img {
+max-width: 100%;
+height: auto;
+}
+
+/* ================= TABLET ================= */
+@media (max-width: 768px) {
+
+.navbar {
+flex-direction: column;
+align-items: flex-start;
+gap: 10px;
+padding: 15px 5%;
+}
+
+header {
+flex-direction: column;
+gap: 10px;
+padding: 12px 5%;
+}
+
+.search-bar {
+width: 100%;
+}
+
+.filters-container {
+padding: 10px 5%;
+}
+
+.grid-wrapper {
+padding: 10px 5%;
+}
+
+.product-grid {
+grid-template-columns: repeat(2, 1fr) !important;
+}
+
+.page-section {
+position: static;
+display: block !important;
+height: auto;
+gap: 20px;
+}
+
+.hero-visual {
+justify-content: center;
+}
+
+.info-panel {
+padding: 25px;
+}
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 480px) {
+
+.navbar {
+padding: 12px 4%;
+}
+
+.logo {
+font-size: 18px;
+}
+
+.product-grid {
+grid-template-columns: 1fr !important;
+}
+
+.name {
+font-size: 14px;
+}
+
+.price {
+font-size: 14px;
+}
+
+.footer-info {
+font-size: 11px;
+}
+
+.home-float {
+bottom: 20px;
+left: 20px;
+padding: 10px 16px;
+font-size: 12px;
+}
+
+.chat-widget {
+bottom: 20px;
+right: 20px;
+width: 50px;
+height: 50px;
+font-size: 20px;
+}
+}
 
 
 
