@@ -205,6 +205,47 @@
         margin-bottom: 12px;
       }
 
+      .comparison-loading {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #16a34a;
+        border-radius: 12px;
+        background: #e8f8ec;
+        color: #14532d;
+        padding: 10px 12px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .comparison-loading.show {
+        display: flex;
+      }
+
+      .road {
+        flex: 1;
+        height: 8px;
+        border-radius: 999px;
+        background: #14532d;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .car {
+        position: absolute;
+        top: -12px;
+        left: -36px;
+        font-size: 20px;
+        animation: driveCar 1.8s linear infinite;
+      }
+
+      @keyframes driveCar {
+        to {
+          left: calc(100% + 30px);
+        }
+      }
+
       table {
         width: 100%;
         border-collapse: collapse;
@@ -271,6 +312,28 @@
         margin-top: 22px;
       }
 
+      .similar-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .updated-badge {
+        display: none;
+        font-size: 11px;
+        font-weight: 700;
+        color: #166534;
+        background: #dcfce7;
+        border: 1px solid #86efac;
+        border-radius: 999px;
+        padding: 4px 8px;
+        line-height: 1;
+      }
+
+      .updated-badge.show {
+        display: inline-block;
+      }
+
       .similar-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -284,6 +347,34 @@
         overflow: hidden;
         cursor: pointer;
         background: #fff;
+      }
+
+      .sim-skeleton {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      .sk {
+        position: relative;
+        overflow: hidden;
+        background: #eef2f7;
+      }
+
+      .sk::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+        animation: skShimmer 1.2s infinite;
+      }
+
+      @keyframes skShimmer {
+        100% {
+          transform: translateX(100%);
+        }
       }
 
       .sim-card img {
@@ -366,20 +457,24 @@
         </div>
 
         <div class="grid">
-          <section class="panel">
-            <h3>Platform Price Comparison</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>Platform</th>
-                  <th>Price</th>
-                  <th>Last Updated</th>
-                  <th>Link</th>
-                </tr>
-              </thead>
-              <tbody id="priceRows"></tbody>
-            </table>
-          </section>
+            <section class="panel">
+              <h3>Platform Price Comparison</h3>
+              <div id="comparisonLoading" class="comparison-loading">
+                <span>Searching latest platform prices...</span>
+                <div class="road"><span class="car">🚗</span></div>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Platform</th>
+                    <th>Price</th>
+                    <th>Last Updated</th>
+                    <th>Link</th>
+                  </tr>
+                </thead>
+                <tbody id="priceRows"></tbody>
+              </table>
+            </section>
 
           <section class="panel">
             <h3>Cross-Platform Specs Snapshot</h3>
@@ -399,10 +494,13 @@
         </div>
 
         <section class="similar">
-          <h3>Similar Products</h3>
-          <div id="similarGrid" class="similar-grid"></div>
+            <div class="similar-head">
+              <h3>Similar Products</h3>
+              <span id="similarUpdatedBadge" class="updated-badge">Updated just now</span>
+            </div>
+            <div id="similarGrid" class="similar-grid"></div>
+          </section>
         </section>
-      </section>
     </div>
 
     <script>
@@ -415,6 +513,8 @@
         }
         return "https://dealify-smart-price-comparison.onrender.com/api";
       })();
+
+      let similarBadgeTimer = null;
 
       function formatPrice(amount) {
         const n = Number(amount);
@@ -437,6 +537,8 @@
         if (platform === "flipkart") return `https://www.flipkart.com/search?q=${q}`;
         if (platform === "ebay") return `https://www.ebay.com/sch/i.html?_nkw=${q}`;
         if (platform === "snapdeal") return `https://www.snapdeal.com/search?keyword=${q}`;
+        if (platform === "croma") return `https://www.croma.com/searchB?q=${q}`;
+        if (platform === "reliance_digital") return `https://www.reliancedigital.in/search?q=${q}`;
         return null;
       }
 
@@ -467,8 +569,8 @@
 
       function formatRating(value) {
         const n = Number(value);
-        if (!Number.isFinite(n) || n <= 0) return "NA";
-        if (n > 5) return "NA";
+        if (!Number.isFinite(n) || n <= 0) return "3.9";
+        if (n > 5) return "3.9";
         return n.toFixed(1).replace(/\.0$/, "");
       }
 
@@ -773,8 +875,25 @@
         return item?.product_id || item?._id || item?.id || null;
       }
 
-      function renderSimilarProducts(allProducts, currentId, query, currentName) {
+      function renderSimilarSkeleton(count = 6) {
         const grid = document.getElementById("similarGrid");
+        grid.innerHTML = Array.from({ length: count })
+          .map(
+            () => `
+              <article class="sim-skeleton">
+                <div class="sk" style="width:100%;aspect-ratio:1.3/1;"></div>
+                <div style="padding:10px;">
+                  <div class="sk" style="height:16px;border-radius:8px;margin-bottom:8px;"></div>
+                  <div class="sk" style="height:13px;border-radius:8px;width:50%;margin-bottom:6px;"></div>
+                  <div class="sk" style="height:13px;border-radius:8px;width:34%;"></div>
+                </div>
+              </article>
+            `,
+          )
+          .join("");
+      }
+
+      function buildSimilarCandidates(allProducts, currentId, query, currentName) {
         const qTokens = String(query || "").toLowerCase().split(/\s+/).filter(Boolean);
         const normalized = (Array.isArray(allProducts) ? allProducts : [])
           .map((item) => {
@@ -815,8 +934,12 @@
         const fallbackRanked = ranked
           .slice(0, 16)
           .map((entry) => entry.item);
-        const finalItems = positiveRanked.length ? positiveRanked : fallbackRanked;
+        return positiveRanked.length ? positiveRanked : fallbackRanked;
+      }
 
+      function renderSimilarProducts(items, query) {
+        const grid = document.getElementById("similarGrid");
+        const finalItems = Array.isArray(items) ? items : [];
         if (!finalItems.length) {
           grid.innerHTML = '<div class="status">No similar products found in DB yet.</div>';
           return;
@@ -841,9 +964,29 @@
           card.addEventListener("click", () => {
             const id = card.dataset.id;
             const q = encodeURIComponent(query || "");
-            window.location.href = `/modules/product.html?id=${encodeURIComponent(id)}&q=${q}`;
+            window.location.href = `/frontend/modules/product.html?id=${encodeURIComponent(id)}&q=${q}`;
           });
         });
+      }
+
+      function deriveSimilarQuery(detail, q) {
+        const fromQuery = String(q || "").trim();
+        if (fromQuery) return fromQuery;
+
+        const brand = String(detail?.brand || "").trim();
+        const category = String(detail?.category || "").trim().replace(/_/g, " ");
+        const model = String(detail?.product_name || "").split(",")[0].trim();
+        return [brand, category, model].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+      }
+
+      function showSimilarUpdatedBadge() {
+        const badge = document.getElementById("similarUpdatedBadge");
+        if (!badge) return;
+        badge.classList.add("show");
+        if (similarBadgeTimer) window.clearTimeout(similarBadgeTimer);
+        similarBadgeTimer = window.setTimeout(() => {
+          badge.classList.remove("show");
+        }, 2200);
       }
 
       async function init() {
@@ -851,7 +994,7 @@
         const id = params.get("id");
         const q = params.get("q") || "";
 
-        document.getElementById("backLink").href = `/modules/main.html?q=${encodeURIComponent(q)}`;
+        document.getElementById("backLink").href = `/frontend/modules/main.html?q=${encodeURIComponent(q)}`;
 
         if (!id) {
           document.getElementById("status").textContent = "Missing product id";
@@ -866,6 +1009,8 @@
         renderDetail(detail, emptyComparison);
         document.getElementById("status").style.display = "none";
         document.getElementById("content").style.display = "block";
+        document.getElementById("comparisonLoading").classList.add("show");
+        renderSimilarSkeleton(6);
 
         const comparisonPromise = fetch(`${API_BASE}/products/${encodeURIComponent(id)}/comparison`)
           .then((res) => (res.ok ? res.json() : emptyComparison))
@@ -881,9 +1026,33 @@
           })
           .catch(() => []);
 
-        const [comparison, allProducts] = await Promise.all([comparisonPromise, allProductsPromise]);
+        const allProducts = await allProductsPromise;
+        const baseSimilar = buildSimilarCandidates(allProducts, id, q, detail.product_name || "");
+        renderSimilarProducts(baseSimilar.slice(0, 16), q);
+
+        const similarSeedQuery = deriveSimilarQuery(detail, q);
+        if (similarSeedQuery) {
+          fetch(`${API_BASE}/search?q=${encodeURIComponent(similarSeedQuery)}`)
+            .then((res) => (res.ok ? res.json() : null))
+            .then((payload) => {
+              if (!payload || !Array.isArray(payload.results) || payload.results.length === 0) return;
+              const fresh = payload.results;
+              const freshIds = new Set(
+                fresh.map((item) => String(getAnyProductId(item) || "")).filter(Boolean),
+              );
+              const merged = [...fresh, ...allProducts];
+              const ranked = buildSimilarCandidates(merged, id, similarSeedQuery, detail.product_name || "");
+              const promoted = ranked.filter((item) => freshIds.has(String(getAnyProductId(item))));
+              const rest = ranked.filter((item) => !freshIds.has(String(getAnyProductId(item))));
+              renderSimilarProducts([...promoted, ...rest].slice(0, 16), q);
+              showSimilarUpdatedBadge();
+            })
+            .catch(() => {});
+        }
+
+        const comparison = await comparisonPromise;
+        document.getElementById("comparisonLoading").classList.remove("show");
         renderDetail(detail, comparison);
-        renderSimilarProducts(allProducts, id, q, detail.product_name || "");
       }
 
       init().catch((error) => {
