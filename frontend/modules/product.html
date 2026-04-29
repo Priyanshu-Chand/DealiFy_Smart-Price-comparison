@@ -432,7 +432,7 @@
   <body>
     <div class="shell">
       <div class="topbar">
-        <a id="backLink" class="back" href="/frontend/modules/main.html">Back to Results</a>
+        <a id="backLink" class="back" href="/modules/main.html">Back to Results</a>
       </div>
 
       <p id="status" class="status">Loading product details...</p>
@@ -994,7 +994,7 @@
         const id = params.get("id");
         const q = params.get("q") || "";
 
-        document.getElementById("backLink").href = `/frontend/modules/main.html?q=${encodeURIComponent(q)}`;
+        document.getElementById("backLink").href = `/modules/main.html?q=${encodeURIComponent(q)}`;
 
         if (!id) {
           document.getElementById("status").textContent = "Missing product id";
